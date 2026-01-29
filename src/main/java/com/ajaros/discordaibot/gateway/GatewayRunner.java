@@ -24,20 +24,22 @@ public class GatewayRunner implements ApplicationRunner {
     client
         .flatMap(
             c -> {
-              eventHandlers.forEach(event -> register(event, c));
+              var registeredHandlers =
+                  eventHandlers.stream().map(event -> register(event, c)).toList();
               log.info("Listening for events...");
-              return c.onDisconnect();
+              return Mono.when(registeredHandlers).and(c.onDisconnect());
             })
         .block();
   }
 
-  private <T extends Event> void register(
+  private <T extends Event> Mono<Void> register(
       EventHandler<T> eventHandler, GatewayDiscordClient client) {
-    client
+
+    log.info("Registered event handler for {}", eventHandler.getEventType().getSimpleName());
+    return client
         .on(eventHandler.getEventType())
         .flatMap(eventHandler::handleEvent)
         .onErrorContinue(eventHandler::handleException)
-        .subscribe();
-    log.info("Registered event handler for {}", eventHandler.getEventType());
+        .then();
   }
 }
