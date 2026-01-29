@@ -1,8 +1,8 @@
 package com.ajaros.discordaibot.events;
 
 import discord4j.core.event.domain.message.MessageCreateEvent;
-import jakarta.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -11,7 +11,7 @@ import reactor.core.publisher.Mono;
 public class MessageEventHandler implements EventHandler<MessageCreateEvent> {
 
   @Override
-  public @Nonnull Mono<Void> handleEvent(MessageCreateEvent event) {
+  public @NonNull Mono<Void> handleEvent(MessageCreateEvent event) {
     var message = event.getMessage();
     if (message.getContent().equals("!ping")) {
       return message.getChannel().flatMap(channel -> channel.createMessage("pong!")).then();
@@ -25,7 +25,7 @@ public class MessageEventHandler implements EventHandler<MessageCreateEvent> {
   }
 
   @Override
-  public @Nonnull Class<MessageCreateEvent> getEventType() {
+  public @NonNull Class<MessageCreateEvent> getEventType() {
     return MessageCreateEvent.class;
   }
 }
