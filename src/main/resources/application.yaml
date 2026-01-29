@@ -1,3 +1,5 @@
 spring:
   application:
     name: discord-ai-bot
+discord:
+  token: ${DISCORD_TOKEN}

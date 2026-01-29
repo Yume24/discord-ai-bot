@@ -6,8 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class DiscordAiBotApplication {
 
-    static void main(String[] args) {
-        SpringApplication.run(DiscordAiBotApplication.class, args);
-    }
-
+  static void main(String[] args) {
+    SpringApplication.run(DiscordAiBotApplication.class, args);
+  }
 }
