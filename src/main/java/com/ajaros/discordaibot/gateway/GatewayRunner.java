@@ -10,22 +10,29 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
 @Component
 @Slf4j
 public class GatewayRunner implements ApplicationRunner {
-  private final GatewayDiscordClient client;
+  private final Mono<GatewayDiscordClient> client;
   private final Set<EventHandler<?>> eventHandlers;
 
   @Override
   public void run(@NonNull ApplicationArguments args) {
-    eventHandlers.forEach(this::register);
-    log.info("Listening for events...");
-    client.onDisconnect().block();
+    client
+        .flatMap(
+            c -> {
+              eventHandlers.forEach(event -> register(event, c));
+              log.info("Listening for events...");
+              return c.onDisconnect();
+            })
+        .block();
   }
 
-  private <T extends Event> void register(EventHandler<T> eventHandler) {
+  private <T extends Event> void register(
+      EventHandler<T> eventHandler, GatewayDiscordClient client) {
     client
         .on(eventHandler.getEventType())
         .flatMap(eventHandler::handleEvent)
