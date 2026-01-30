@@ -35,8 +35,8 @@ public class GatewayRunner implements ApplicationRunner {
       EventHandler<T> eventHandler, GatewayDiscordClient client) {
     client
         .on(eventHandler.getEventType())
-        .flatMap(eventHandler::handleEvent)
-        .onErrorContinue(eventHandler::handleException)
+        .flatMap(
+            event -> eventHandler.handleEvent(event).onErrorResume(eventHandler::handleException))
         .subscribe();
     log.info("Registered event handler for {}", eventHandler.getEventType());
   }

@@ -7,7 +7,7 @@ import reactor.core.publisher.Mono;
 public interface EventHandler<T extends Event> {
   @NonNull Mono<Void> handleEvent(T event);
 
-  void handleException(Throwable throwable, Object o);
+  @NonNull Mono<Void> handleException(Throwable throwable);
 
   @NonNull Class<T> getEventType();
 }

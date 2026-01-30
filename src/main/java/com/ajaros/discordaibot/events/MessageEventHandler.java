@@ -19,8 +19,9 @@ public class MessageEventHandler implements EventHandler<MessageCreateEvent> {
   }
 
   @Override
-  public void handleException(Throwable throwable, Object o) {
+  public @NonNull Mono<Void> handleException(Throwable throwable) {
     log.error("Error handling event: {}", throwable.getMessage());
+    return Mono.empty();
   }
 
   @Override
