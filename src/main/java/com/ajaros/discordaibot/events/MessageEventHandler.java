@@ -30,7 +30,6 @@ public class MessageEventHandler implements EventHandler<MessageCreateEvent> {
   }
 
   private Mono<Void> handleMention(Message message) {
-
     return message
         .getChannel()
         .flatMap(c -> c.createMessage("I was mentioned! You said: " + message.getContent()))
