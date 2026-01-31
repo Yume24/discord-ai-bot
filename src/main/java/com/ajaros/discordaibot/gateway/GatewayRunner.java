@@ -24,14 +24,14 @@ public class GatewayRunner implements ApplicationRunner {
     client
         .flatMap(
             c -> {
-              eventHandlers.forEach(event -> register(event, c));
+              eventHandlers.forEach(event -> registerEventHandler(event, c));
               log.info("Listening for events...");
               return c.onDisconnect();
             })
         .block();
   }
 
-  private <T extends Event> void register(
+  private <T extends Event> void registerEventHandler(
       EventHandler<T> eventHandler, GatewayDiscordClient client) {
     client
         .on(eventHandler.getEventType())
